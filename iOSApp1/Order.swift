@@ -7,15 +7,21 @@
 
 import SwiftUI
 
-// Enum to define different categories of drinks
-enum DrinkCategory: String, CaseIterable {
+// Represents an individual order with a category and its items
+struct Order {
+  let menuName: String
+  var items: [(name: String, quantity: Int)]
+}
+
+// Enum for menu categories
+enum MenuCategory: String, CaseIterable {
   case hotDrinks = "Hot Drinks"
   case coldDrinks = "Cold Drinks"
   case donuts = "Donuts"
   case sandwiches = "Sandwiches"
   case soups = "Soups"
   
-  // Example drinks for each category
+  // Example items for each category
   var items: [String] {
     switch self {
     case .hotDrinks:
@@ -64,3 +70,5 @@ enum DrinkCategory: String, CaseIterable {
     }
   }
 }
+
+

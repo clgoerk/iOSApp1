@@ -8,16 +8,21 @@
 import SwiftUI
 
 struct OrderView: View {
-  // Track the selected quantities for each drink
+  @Binding var selectedTab: Int
   @State private var selectedDrinks: [String: Int] = [:]
   
-  // The current category passed from the parent
-  var category: DrinkCategory
+  // The current category index passed from the parent
+  let index: Int
+  
+  // Computed property to get the current category
+  var category: MenuCategory {
+    MenuCategory.allCases[index]
+  }
   
   var body: some View {
     VStack {
       // Display category title
-      HeaderView(titleText: category.rawValue)
+      HeaderView(selectedTab: $selectedTab, titleText: category.rawValue)
         .edgesIgnoringSafeArea(.all)  // Ignore the top and horizontal safe areas
 
       // Loop through the drinks for the current category
@@ -39,7 +44,7 @@ struct OrderView: View {
               .font(.title2)
           }
 
-          // Counter for the quantity
+          // Counter for quantity
           Text("\(selectedDrinks[item] ?? 0)")
             .frame(width: 30, alignment: .center)
 
@@ -77,14 +82,12 @@ struct OrderView: View {
   // Action to handle adding the selected items to the order
   private func addToOrder() {
     print("Adding to Order: \(selectedDrinks)")
-    
-    // Clear the selected items after adding to the order (optional)
-    selectedDrinks.removeAll()
+    selectedDrinks.removeAll() // Clear the selected items after adding to the order
   }
 }
 
 struct OrderView_Previews: PreviewProvider {
   static var previews: some View {
-    OrderView(category: .hotDrinks)
+    OrderView(selectedTab: .constant(0), index: 0)
   }
 }

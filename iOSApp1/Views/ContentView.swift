@@ -8,18 +8,23 @@
 import SwiftUI
 
 struct ContentView: View {
+  @State private var selectedTab = 9 
+
   var body: some View {
-    TabView {
-      WelcomeView()
+    TabView(selection: $selectedTab) {
+      WelcomeView(selectedTab: $selectedTab)
+        .tag(9)
         .edgesIgnoringSafeArea(.all)
-      
-      ForEach(DrinkCategory.allCases, id: \.self) { category in
-        OrderView(category: category)
-          .edgesIgnoringSafeArea(.all)  // Ensures each OrderView fills the screen
+
+      // OrderViews for each MenuCategory
+      ForEach(MenuCategory.allCases.indices, id: \.self) { index in
+        OrderView(selectedTab: $selectedTab, index: index)
+          .tag(index)
+          .edgesIgnoringSafeArea(.all)
       }
     }
     .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
-    .edgesIgnoringSafeArea(.all)  // Ensures the TabView itself fills the screen as well
+    .edgesIgnoringSafeArea(.all)
   }
 }
 

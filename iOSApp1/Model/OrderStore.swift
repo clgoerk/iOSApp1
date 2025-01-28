@@ -8,9 +8,9 @@
 import Foundation
 
 struct OrderDay: Identifiable {
-  let id = UUID()
-  let date: Date
-  var items: [(name: String, quantity: Int)] = [] 
+  var id = UUID()  // Make it identifiable for ForEach
+  var date: Date
+  var orders: [Order]
 }
 
 struct OrderStore {

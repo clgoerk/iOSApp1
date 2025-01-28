@@ -8,13 +8,16 @@
 import SwiftUI
 
 struct WelcomeView: View {
+  @Binding var selectedTab: Int // Binding to the selected tab index
+
   var body: some View {
     ZStack {
       Color.red
         .edgesIgnoringSafeArea(.all)
 
       VStack {
-        HeaderView(titleText: "Welcome")
+        // Passing the selectedTab binding to HeaderView
+        HeaderView(selectedTab: $selectedTab, titleText: "Welcome")
           .padding(.bottom, 50)
         
         // Logo
@@ -31,7 +34,9 @@ struct WelcomeView: View {
           .padding()
 
         // Get Started Button
-        Button(action: { }) {
+        Button(action: {
+          selectedTab = 0 // Navigate to the first tab
+        }) {
           HStack {
             Text("Get Started")
             Image(systemName: "arrow.right.circle")
@@ -50,13 +55,14 @@ struct WelcomeView: View {
           .foregroundColor(.white)
       }
     }
-  } // body
-} // WelconeView()
+  }
+}
 
 struct WelcomeView_Previews: PreviewProvider {
   static var previews: some View {
-    WelcomeView()
+    // Pass a default value for preview
+    WelcomeView(selectedTab: .constant(9))
   }
-} // WelcomeView_Previews()
+}
 
 
