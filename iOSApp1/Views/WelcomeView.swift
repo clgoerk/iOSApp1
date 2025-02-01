@@ -8,61 +8,90 @@
 import SwiftUI
 
 struct WelcomeView: View {
-  @Binding var selectedTab: Int // Binding to the selected tab index
+  @Binding var selectedTab: Int
+  @State private var showHistory = false
+  @EnvironmentObject var history: HistoryStore
 
   var body: some View {
-    ZStack {
-      Color.red
-        .edgesIgnoringSafeArea(.all)
-
-      VStack {
-        // Passing the selectedTab binding to HeaderView
-        HeaderView(selectedTab: $selectedTab, titleText: "Welcome")
-          .padding(.bottom, 50)
+    GeometryReader { geometry in
+      ZStack {
+        VStack {
+          HeaderView(selectedTab: $selectedTab, titleText: "Welcome")
+            .padding(.bottom, 0)
         
-        // Logo
-        Image("WelcomeImage")
-          .resizable()
-          .scaledToFit()
-          .frame(width: 300, height: 250)
-        
-        // Title text
-        Text("Coffee Run")
-          .font(.largeTitle)
-          .fontWeight(.bold)
-          .foregroundColor(.white)
-          .padding()
+          ContainerView {
 
-        // Get Started Button
-        Button(action: {
-          selectedTab = 0 // Navigate to the first tab
-        }) {
-          HStack {
-            Text("Get Started")
-            Image(systemName: "arrow.right.circle")
+            ViewThatFits {
+              VStack {
+                Image("WelcomeImage")
+                  .resizable()
+                  .scaledToFit()
+                  .frame(width: 240, height: 240)
+                  .clipShape(Circle())
+
+                Text("Coffee Run")
+                  .font(.largeTitle)
+                  .fontWeight(.bold)
+                  .foregroundColor(.white)
+                  .padding(.top, 10)
+
+                getStartedButton
+
+     
+                Image("coffee")
+                  .resizable()
+                  .scaledToFit()
+                  .frame(width: 200, height: 150)
+                  .padding(.top, 10)
+                  .padding(.bottom, 30)
+
+                ordersButton
+                              
+                Spacer()
+              }
+            }
+            .padding(.bottom, 50)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .cornerRadius(20)
+            .ignoresSafeArea()
           }
-          .padding()
-          .background(Color.white)
-          .cornerRadius(10)
-          .foregroundColor(.red)
         }
-        
-        Spacer()
-        
-        // Order Summary Button
-        Button("Order Summary") { }
-          .padding(.bottom)
-          .foregroundColor(.white)
+        .padding(0)
       }
     }
-  }
-}
+  } // body
+
+  var getStartedButton: some View {
+    RaisedButton(buttonText: "Get Started") {
+      selectedTab = 0
+    }
+    .frame(width: 200)
+  } // getStartedButton
+
+  var ordersButton: some View {
+    embossedButton(action: {
+      showHistory.toggle()
+    }, label: "Orders")
+    .fullScreenCover(isPresented: $showHistory) {
+      HistoryView(showHistory: $showHistory)
+        .background(GradientBackground().ignoresSafeArea())
+    }
+  } // orderButton
+
+  func embossedButton(action: @escaping () -> Void, label: String) -> some View {
+    Button(action: action) {
+      Text(label)
+        .font(.headline)
+        .fontWeight(.bold)
+        .frame(width: 200, height: 50)
+    }
+    .buttonStyle(EmbossedButtonStyle(buttonShape: .roundedRectangle, width: 200, height: 50, fontSize: .headline))
+  } // embossedButton()
+} // WelcomeView
 
 struct WelcomeView_Previews: PreviewProvider {
   static var previews: some View {
-    // Pass a default value for preview
     WelcomeView(selectedTab: .constant(9))
+      .environmentObject(HistoryStore())
   }
-}
-
-
+} // WelcomeView_Previews

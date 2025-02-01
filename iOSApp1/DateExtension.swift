@@ -5,6 +5,7 @@
 //  Created by Chris Goerk on 2025-01-22.
 //
 
+
 import Foundation
 
 extension Date {
@@ -34,5 +35,14 @@ extension Date {
     let dateFormatter = DateFormatter()
     dateFormatter.dateFormat = "EEEE"
     return dateFormatter.string(from: self)
+  }
+
+  var previousSevenDays: [Date] {
+    (-6...0).map { day in
+      Calendar.current.date(
+        byAdding: .day,
+        value: day,
+        to: self) ?? Date()
+    }
   }
 }
